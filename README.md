@@ -1,66 +1,120 @@
 # Before starting
 
-* This document is a code style convention among `Autonomous Technologies Lab` engineers, developers, coders. Whoever works with source code is encouraged to reflect his or her preferences on this document.
-* The purpose of this document is to increase the speed of development fo whole team by using a unified code style since it improves code quality and maintainability of code. Unified code style can help new users pick up the code quickly, effective code reviews, **`???deriving source code metrics such as SLO???`**.
+This document is a code style convention among `Raccoonlab` engineers, developers, coders.
+
+At that moment this document covers 2 programming languages: C++ and Python:
+- C++ code style is mainly based on Google code style with few differences. It is recommended to use such tools as `astyle` and `cpplint` to automatically verify the style of source code.
+- Python code style is base on PEP8.
+
+Whoever works with source code is encouraged to reflect his or her preferences on this document.
+
+# Content
+- [C++ code style](#c-code-style)
+    - [1. Brace Style](#1-brace-style)
+    - [2. Tab](#1-tab)
+    - [3. Indentation](#3-indentation)
+    - [4. Case style](#4-case-style)
+        - [4.1. Type Names](#41-type-names)
+        - [4.2. Variables](#42-variables)
+        - [4.3. Functions](#43-functions)
+        - [4.4. Constants](#44-constants)
+    - [3. Spacing](#3-spacing)
+    - [4. Function calls](#4-function-calls)
+    - [5. Trailing whitespaces](#5-trailing-whitespaces)
+    - [6. Line breaks](#6-line-breaks)
+        - [6.1. Single statements](#61-single-statements)
+        - [6.2. Else statement](#62-else-statement)
+    - [7. Names](#7-names)
+        - [7.1. Private members](#71-private-members)
+    - [8. Commenting](#8-commenting)
+        - [8.1. Comment of a file](#81-comment-of-a-file)
+        - [8.2. Comment of a function](#82-comment-of-a-function)
+- [Automation tools](#automation-tools)
+    - [1. Doxygen](#1-doxygen)
+    - [2. cpplint](#2-cpplint)
+    - [3. astype](#3-astype)
+    - [4. github actions](#4-github-actions)
+
 
 # C++ code style
 
-## 1. Case
+## 1. Brace Style
 
-**1.1. Variables and function names are lowercase with words separated by an underscore**
+Typically there are three basic brace styles.
+1. Attached – the braces are attached to the end of the last line of the previous block (Java, Google).
+2. Broken – the braces are broken from the previous block (Allman).
+3. Linux – The braces are attached except for the opening brace of a function, class, or namespace (K&R, Linux).
+
+Here, let's use `attached` style. Below you can see few examples.
 
 Right:
 
 ```c++
-int throttle_input;
+int BraceStyleExample(bool isBar) {
+    if (isBar) {
+        bar();
+        return 1;
+    } else {
+        return 0;
+    }
+}
+```
+
+**Control statements**
+
+Control statements (if, while, do, else) should always use braces around the statements.
+
+```c++
+if (condition) {
+    foo();
+} else {
+    bar();
+}
 ```
 
 Wrong:
 
 ```c++
-int ThrottleInput;
+if (condition)
+    foo();
+else
+    bar();
 ```
 
-**1.2. Constant names and macros are uppercase with words separated by an underscore**
-
-Right:
-
-```c++
-const int UPPER_UNDERLINED_CASE;
-```
-
-Wrong:
-
-```c++
-const int upper_underlined_case;
-const int UPPERUNDERLINEDCASE;
-```
-
-## 2. Indentation
-
-**2.1. Spaces**
+## 2. Tab
 
 Indent using 4 spaces everywhere. Do not use tabs.
 
 Right:
 
 ```c++
-int foo() {
-    return 0;         
+void Foo() {
+....if (isBar1
+............&& isBar2) {
+........bar();
+....}
 }
 ```
 
-Wrong:
+## 3. Indentation
+
+### 3.1. Classes
+
+Public, protected and private keywords require 2 spaces.
+
+Right:
 
 ```c++
-int foo() {
-  return 0;         
-}
+class Foo {
+  public:
+    Foo();
+    virtual ~Foo();
+};
 ```
 
-**2.2. Case statements**
+### 3.2. Switches
 
-The case label indentation is acceptable either when lined up with the switch or indented once.
+The case label requires 4 spaces indentation.
 
 Right:
 
@@ -75,22 +129,56 @@ switch (condition) {
 }
 ```
 
-Wrong:
+### 3.3. Namespaces
+
+Namespaces do not add an extra level of indentation
 
 ```c++
-switch (condition) {
-case foo_cond:
-    foo();
-break;
-case bar_cond:
-    bar();
-break;
+namespace foospace {
+class Foo {
+  public:
+    Foo();
+    virtual ~Foo();
+};
 }
 ```
 
-## 3. Spacing
+## 4. Case style
 
-**3.1. Unary operators**
+Here we use mixed case style. It is preaty similar to the Google case style.
+
+### 4.1. Type Names
+
+Types are PascalCase.
+
+### 4.2. Variables
+
+Variables are `snake_case`. Example:
+
+```c++
+int throttle_input;
+```
+
+### 4.3. Functions
+
+Functions are `camelCase`. Example:
+
+```c++
+void setValue();
+```
+
+### 4.4. Constants
+
+Constant names and macros are uppercase with words separated by an underscore. Example:
+
+```c++
+const int UPPER_UNDERLINED_CASE;
+```
+
+
+## 5. Spacing
+
+### 5.1. Unary operators
 
 Do not place spaces around unary operators.
 
@@ -106,7 +194,7 @@ Wrong:
 i ++ ;
 ```
 
-**3.2. Control statements**
+### 5.2. Control statements
 
 Single space between control statements and their parentheses.
 
@@ -130,31 +218,13 @@ if(condition) {
 }
 ```
 
-## 4. Function calls
-
-Do not place spaces between a function and its parentheses, or between a parenthesis and its content.
-
-Right:
-
-```c++
-foo(a, 10);
-```
-
-Wrong:
-
-```c++
-foo (a, 10);
-
-foo(a, 10 );
-```
-
-### 5. Trailing whitespaces
+### 5.3. Trailing whitespaces
 
 Don’t leave trailing whitespace on new code (a good editor can manage this for you). Fixing whitespace on existing code should be done as a separate commit (do not include with other changes).
 
 ## 6. Line breaks
 
-**6.1. Single statements**
+### 6.1. Single statements
 
 Each statement should get its own line except in method implementations in header files which may (or may not be) on a single line(line length is less than 100).
 
@@ -163,7 +233,7 @@ Right:
 ```c++
 x++;
 y++;
-If (condition) {
+if (condition) {
     foo();
 }
 
@@ -177,14 +247,14 @@ x++; y++;
 if (condition) foo();
 ```
 
-**6.2. Else statement**
+### 6.2. Else statement
 
 An else statement should go on the same line as a preceding close brace.
 
 Right:
 
 ```c++
-If (condition) {
+if (condition) {
     foo();
 } else {
     bar();
@@ -202,65 +272,9 @@ else{
 }
 ```
 
-## 7. Braces
+## 7. Names
 
-**7.1. Function braces**
-
-Functions definitions: place each brace on its own line. For methods inside a header file, braces can be inline(if length is less than 100).
-
-**7.2. Control statements**
-
-Control statements (if, while, do, else) should always use braces around the statements.
-Right:
-
-```c++
-If (condition) {
-    foo();
-} else {
-    bar();
-}
-```
-
-Wrong:
-
-```c++
-if (condition)
-    foo();
-else
-    bar();
-```
-
-**7.3. Other braces**
-
-Place the open brace on the line preceding the code block; place the close brace on its own line.
-Right:
-
-```c++
-class My_Class {
-    ...
-};
-
-namespace AP_HAL {
-    ...
-}
-
-for (int i = 0; i < 10; i++) {
-    ...
-}
-```
-
-Wrong:
-
-```c++
-class My_Class
-{
-    ...
-};
-```
-
-## 8. Names
-
-**8.1. Private members**
+### 7.1. Private members
 
 Private members in classes should be prefixed with an underscore:
 
@@ -268,7 +282,7 @@ Right:
 
 ```c++
 class My_Class {
-private:
+  private:
     int _field;
 };
 ```
@@ -277,51 +291,15 @@ Wrong:
 
 ```c++
 class My_Class {
-private:
+  private:
     int field;
 };
 ```
 
-**8.2. Functions and variables**
 
-Functions that return a single physical value or variables that represent a physical value should be suffixed by the physical unit.
+## 8. Commenting
 
-Right:
-
-```c++
-uint16 get_angle_rad() { ... }; 
-float distance_m;
-```
-
-Wrong:
-
-```c++
-uint16 get_angle() { ... };
-float distance;
-```
-
-**8.3. Other**
-
-Functions or variables that represent a value relative to a frame should be suffixed with the frame first, then with the physical unit (if any).
-
-Right:
-
-```c++
-uint16 get_distance_ned_cm() { ... }; 
-uint16 get_distance_enu_m() { ... }; 
-float position_neu_mm;
-```
-
-Wrong:
-
-```c++
-uint16 get_distance() { ... };
-float position;
-```
-
-## 9. Commenting
-
-**9.1. Comment of a file**
+### 8.1. Comment of a file
 
 Each file with public visibility should have a comment at the top describing what it does.
 
@@ -334,7 +312,7 @@ Each file with public visibility should have a comment at the top describing wha
  */
 ```
 
-### Comment of a function
+### 8.2. Comment of a function
 
 Other things such as method and field descriptions are optional and depend on the value of them for readers and they should not be too explicit.
 
@@ -358,61 +336,18 @@ There are different levels of details: in addition to commenting out non-obvious
 
 [cpplint](https://github.com/cpplint/cpplint) is the utility for formatting checks and static code analysis. It is based on Google C++ code style, but some things such as line length, braces and number of spaces can be filtered.
 
-Example of `CPPLINT.cfg`:
- 
-```bash
-# Stop searching for additional config files.
-set noparent
- 
-# 1. Increase limit line length because 80 it's not enough.
-#    100 should be ok since all modern supports even 2 text editors
-#    with this length.
-#    120 could be used if you really want it
-linelength=100
- 
-# 2. Ignore requirement to use copyright since we don’t have it yet
-filter=-legal/copyright
- 
-# 3. Ignore requirement to use 1 space indent inside class
-#    So you can use any number of spaces that you want.
-#    4 spaces is recommended
-filter=-whitespace/indent
- 
-# 4. (optional) Ignore requirement to include "foo/bar.h" instead of
-#    just "bar.h"
-filter=-build/include_subdir
- 
-# 5. For C-projects:
-#    C-style cast is the only way to perform cast.
-filter=-readability/casting
-```
+It is expected to use [CPPLINT.cfg](CPPLINT.cfg) file with configuration.
 
 ## 3. astype
 
-`astyle` is our tool of choice for formatting the code
+`astyle` is our tool of choice for formatting the code.
 
-astylerc: script that checks formatting without changes and print color diff
+Typicaly you may deal with following scripts:
 
-```bash
-#!/bin/bash
-# Check http://astyle.sourceforge.net/astyle.html
- 
-function show_files_diff {
-   astyle  --style=linux \
-           --indent=spaces=4 \
-           --indent-col1-comments \
-           --suffix=none \
-           --lineend=linux \
-           --pad-header \
-           --indent-preproc-cond \
-           --indent-preproc-block \
-           --max-code-length=120 \
-           < $filename > $filename.pretty
-   git --no-pager diff --no-index --minimal --histogram --color=always $filename $filename.pretty
-   rm -f $filename.pretty
-}
- 
-for filename in Src/Common/Inc/*.h; do
-   show_files_diff
-done
-```
+1. [astylerc](astylerc) is the file that has rules for astyle
+2. [astyle_check_single_file.sh](astyle_check_single_file.sh) script that show code style mistakes
+3. [astyle_fix_single_file.sh](astyle_fix_single_file.sh) script that automatically fix style mistakes
+
+## 4. github actions
+
+[.github/workflows/code_style.yml](.github/workflows/code_style.yml) is an example of how can you automatically run cpplint and astyle together with your code on github.

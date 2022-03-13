@@ -1,0 +1,8 @@
+# Bracer style option
+style=google
+
+# Indent
+indent=spaces=4
+indent-switches
+
+max-code-length=100
